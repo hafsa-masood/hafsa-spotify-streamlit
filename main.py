@@ -15,7 +15,6 @@ piecharts = st.container()
 top5 = st.container()
 times = st.container()
 
-# TODO: Fetch this data from Github and cache it using st.cache_data
 spotify_data = pd.read_csv('spotify_data_with_category.csv')
 
 spotify_data['endTime'] = pd.to_datetime(spotify_data['endTime'])
@@ -26,7 +25,7 @@ with title_container:
     st.subheader("Here's your listening summary from the past year.")
 
 with bignumber:
-    st.text("This past year, your total listening time summed up to be:")
+    st.markdown("This past year, your total listening time summed up to be:")
     _, middle, _ = st.columns([1, 3, 1])
     with middle:
         total_time_played = spotify_data['msPlayed'].sum()/milliseconds_in_hour
@@ -38,7 +37,7 @@ with bignumber:
 
 with piecharts: 
     st.header("Breakdown by Song & Podcast")
-    st.subheader("You mostly listened to songs, but podcasts made up most of your listening time.")
+    st.subheader("In terms of the number of individual tracks, you mostly listened to songs, but podcasts made up most of your total listening time.")
     col1, col2 = st.columns(2)
     with col1:
         fig, ax = plt.subplots()
@@ -64,7 +63,7 @@ with piecharts:
         plt.title('By Minutes Listened')
         st.pyplot(fig)
     
-    st.text("some blurb about other category")
+    st.markdown("> 💡 I used the Spotify API to categorize each track as a podcast or a song. I was able to categorize all except one of the 8054 records. My algorithm was unable to categorize an episode of *The Ringer NBA Show*, ('Boston Stays Alive … But for How Long? Plus, a Deep Dive Into LeBron’s Retirement Plan'), and marked it as 'other'. I deliberately kept this 'other' categorization to show what would happen with my visualizations in case more tracks could not be categorized properly.")
 
     st.divider()
 
@@ -88,20 +87,19 @@ with top5:
         column_config={
             "artistName": "Podcast",
             "listenCount": "Times Played",
-            "totalHoursPlayed": "Hours Played 🕓"
+            "totalHoursPlayed": "Hours Played"
         },
         hide_index=True,
     )
     
-    st.subheader('Top 5 Songs & Artists')
+    st.subheader('Top 5 Songs & Artists 🎶')
     
-    
-    
-    st.subheader("The artist you listened to the most was Luke Combs")
+    st.subheader("The artist you listened to the most was Luke Combs...")
 
     luke_combs = Image.open('assets/luke_combs.jpg')
     st.image(luke_combs)
-    st.text("Top 5 Artists ")
+    
+    st.markdown("Top 5 Artists 🎸")
     artists = spotify_data[spotify_data['category']=='song'].groupby('artistName').agg(
         listenCount=('msPlayed', 'count'),
         totalHoursPlayed=('msPlayed', lambda x: (x / 3600000).sum())
@@ -112,15 +110,15 @@ with top5:
         column_config={
             "artistName": "Artist",
             "listenCount": "Times Played",
-            "totalHoursPlayed": "Hours Played 🕓"
+            "totalHoursPlayed": "Hours Played"
         },
         hide_index=True,
     )
-    st.subheader("And the song you played the most was Doin' This by Luke Combs")
+    st.subheader("... and the song you played the most was Doin' This by Luke Combs")
     doin_this = Image.open('assets/doin_this.jpg')
     st.image(doin_this)
-    st.text("Top 5 Songs")
-
+    
+    st.markdown("Top 5 Songs 🎵")
     songs = spotify_data[spotify_data['category']=='song'].groupby(['trackName', 'artistName']).agg(
         listenCount=('msPlayed', 'count'),
         totalMinutesPlayed=('msPlayed', lambda x: (x / 60000).sum())
@@ -137,8 +135,6 @@ with top5:
         hide_index=True,
     )
     st.divider()
-
-
 
 with times:
     st.header("Time Analysis ⏳")
