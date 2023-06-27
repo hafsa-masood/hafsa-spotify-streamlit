@@ -142,8 +142,9 @@ with top5:
 
 with times:
     st.header("Time Analysis ⏳")
+    st.subheader("Based on the Total Listen Time and the Number of Listens, you are mostly tuned into podcasts in the AM, while in the evenings you tend to enjoy your music!")
 
-    tab1, tab2, tab3 = st.tabs(["Average", "Total", "Count"])
+    tab1, tab2, tab3 = st.tabs(["Average Listen Time", "Total Listen Time", "Number of Listens"])
 
     with tab1:
         st.subheader("Average Listen Time By Hour")
